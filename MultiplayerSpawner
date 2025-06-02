@@ -1,0 +1,26 @@
+# === MultiplayerSpawner === --- Level ---
+
+
+extends Area3D
+
+@export var damage_amount: int = 20
+@export var freeze_duration: float = 1.0
+@onready var snap_sound: AudioStreamPlayer3D = $SnapSound
+
+func _ready():
+	connect("body_entered", _on_body_entered)
+
+# 👇 This is where you put the function
+func _on_body_entered(body):
+	if body.has_method("take_damage"):
+		body.take_damage(damage_amount)
+	if body.has_method("freeze_for"):
+		body.freeze_for(freeze_duration)
+
+	snap_sound.play()
+
+	# Disappear after triggering
+	visible = false
+	set_deferred("collision_layer", 0)
+	set_deferred("collision_mask", 0)
+	await snap_
